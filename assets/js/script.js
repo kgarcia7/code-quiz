@@ -1,134 +1,206 @@
-// creating an array and passing the number, questions, options, and answers
-let questions = [
+const questions = [
     {
-    numb: 1,
-    question: "What does HTML stand for?",
-    answer: "Hyper Text Markup Language",
-    options: [
-      "Hyper Text Preprocessor",
-      "Hyper Text Markup Language",
-      "Hyper Text Multiple Language",
-      "Hyper Tool Multi Language"
-    ]
-  },
+        question: "What does HTML standing for?",
+        answers: [
+            { text: "Highly Targetted Markup Language", correct: false},
+            { text: "Hyper Text Machine Language", correct: false},
+            { text: "Huge Text Markup Language", correct: false},
+            { text: "Hyper Text Markup Language", correct: true},
+        ]
+    },
     {
-    numb: 2,
-    question: "What does CSS stand for?",
-    answer: "Cascading Style Sheet",
-    options: [
-      "Common Style Sheet",
-      "Colorful Style Sheet",
-      "Computer Style Sheet",
-      "Cascading Style Sheet"
-    ]
-  },
+        question: "Commonly used data types do NOT include",
+        answers: [
+            { text: "strings", correct: false},
+            { text: "booleans", correct: false},
+            { text: "alerts", correct: true},
+            { text: "numbers", correct: false},
+        ]
+    },
     {
-    numb: 3,
-    question: "What does PHP stand for?",
-    answer: "Hypertext Preprocessor",
-    options: [
-      "Hypertext Preprocessor",
-      "Hypertext Programming",
-      "Hypertext Preprogramming",
-      "Hometext Preprocessor"
-    ]
-  },
+        question: "The condition in an if / else statement is enclosed with ____",
+        answers: [
+            { text: "quotes", correct: false},
+            { text: "curly brackets", correct: true},
+            { text: "parenthesis", correct: false},
+            { text: "square brackets", correct: false},
+        ]
+    },
     {
-    numb: 4,
-    question: "What does SQL stand for?",
-    answer: "Structured Query Language",
-    options: [
-      "Stylish Question Language",
-      "Stylesheet Query Language",
-      "Statement Question Language",
-      "Structured Query Language"
-    ]
-  },
+        question: "What is the purpose of a variable in programming?",
+        answers: [
+            { text: "To store and manage data", correct: true},
+            { text: "To perform mathematical calculations", correct: false},
+            { text: "To display information on the screen", correct: false},
+            { text: "To create loops in the code", correct: false},
+        ]
+    },
     {
-    numb: 5,
-    question: "What does XML stand for?",
-    answer: "eXtensible Markup Language",
-    options: [
-      "eXtensible Markup Language",
-      "eXecutable Multiple Language",
-      "eXTra Multi-Program Language",
-      "eXamine Multiple Language"
-    ]
-  },
-  // you can uncomment the below codes and make duplicate as more as you want to add question
-  // but remember you need to give the numb value serialize like 1,2,3,5,6,7,8,9.....
-
-  //   {
-  //   numb: 6,
-  //   question: "Your Question is Here",
-  //   answer: "Correct answer of the question is here",
-  //   options: [
-  //     "Option 1",
-  //     "option 2",
-  //     "option 3",
-  //     "option 4"
-  //   ]
-  // },
+        question: "What is the purpose of a for loop in programming?",
+        answers: [
+            { text: "To declare a variable", correct: false},
+            { text: "To define a function", correct: false},
+            { text: "To repeat a block of code a specific number of times", correct: true},
+            { text: "To display a message to the user", correct: false},
+        ]
+    }
 ];
 
-//selecting all required elements
-const start_btn = document.querySelector(".start_btn button");
-const info_box = document.querySelector(".info_box");
-const exit_btn = info_box.querySelector(".buttons .quit");
-const continue_btn = info_box.querySelector(".buttons .restart");
-const quiz_box = document.querySelector(".quiz_box");
-const result_box = document.querySelector(".result_box");
-const option_list = document.querySelector(".option_list");
-const time_line = document.querySelector("header .time_line");
-const timeText = document.querySelector(".timer .time_left_txt");
-const timeCount = document.querySelector(".timer .timer_sec");
+const questionElement = document.getElementById("question");
+const answerButtons = document.getElementById("answer-buttons");
+const nextButton = document.getElementById("next-btn");
+const timerElement = document.getElementById("timer");
+const scoreElement = document.getElementById("score");
+const initialsForm = document.getElementById("initials-form");
+const initialsInput = document.getElementById("initials-input");
 
-// if startQuiz button clicked
-start_btn.onclick = ()=>{
-    info_box.classList.add("activeInfo"); //show info box
+let currentQuestionIndex = 0;
+let score = 0;
+let timer;
+const timeLimitPerQuestion = 30;
+
+function startQuiz () {
+    currentQuestionIndex = 0;
+    score = 0;
+    nextButton.innerHTML = "Next";
+    showQuestion(); 
+    startTimer();
 }
 
-// if exitQuiz button clicked
-exit_btn.onclick = ()=>{
-    info_box.classList.remove("activeInfo"); //hide info box
+function showQuestion() {
+    resetState();
+    let currentQuestion = questions[currentQuestionIndex];
+    let questionNo = currentQuestionIndex + 1;
+    questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
+
+    currentQuestion.answers.forEach(answer => {
+        const button = document.createElement("button");
+        button.innerHTML = answer.text;
+        button.classList.add("btn");
+        answerButtons.appendChild(button);
+        if(answer.correct){
+            button.dataset.correct = answer.correct;
+        }
+        button.addEventListener("click", selectAnswer);
+        });
 }
 
-// if continueQuiz button clicked
-continue_btn.onclick = ()=>{
-    info_box.classList.remove("activeInfo"); //hide info box
-    quiz_box.classList.add("activeQuiz"); //show quiz box
-    showQuetions(0); //calling showQestions function
-    queCounter(1); //passing 1 parameter to queCounter
-    startTimer(30); //calling startTimer function
-    startTimerLine(0); //calling startTimerLine function
+function resetState() {
+    nextButton.style.display = "none";
+    while(answerButtons.firstChild){
+        answerButtons.removeChild(answerButtons.firstChild);
+    }
 }
 
-let timeValue =  30;
-let que_count = 0;
-let que_numb = 1;
-let userScore = 0;
-let counter;
-let counterLine;
-let widthValue = 0;
+function startTimer() {
+    let timeLeft = timeLimitPerQuestion;
+    timerElement.textContent = `Time left: ${timeLeft} seconds`;
+  
+    timer = setInterval(() => {
+      timeLeft--;
+  
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        handleNextButton();
+      } else {
+        timerElement.textContent = `Time left: ${timeLeft} seconds`;
+      }
+    }, 1000);
+  }
 
-const restart_quiz = result_box.querySelector(".buttons .restart");
-const quit_quiz = result_box.querySelector(".buttons .quit");
 
-// if restartQuiz button clicked
-restart_quiz.onclick = ()=>{
-    quiz_box.classList.add("activeQuiz"); //show quiz box
-    result_box.classList.remove("activeResult"); //hide result box
-    timeValue = 30; 
-    que_count = 0;
-    que_numb = 1;
-    userScore = 0;
-    widthValue = 0;
-    showQuetions(que_count); //calling showQestions function
-    queCounter(que_numb); //passing que_numb value to queCounter
-    clearInterval(counter); //clear counter
-    clearInterval(counterLine); //clear counterLine
-    startTimer(timeValue); //calling startTimer function
-    startTimerLine(widthValue); //calling startTimerLine function
-    timeText.textContent = "Time Left"; //change the text of timeText to Time Left
-    next_btn.classList.remove("show"); //hide the next button
+function selectAnswer(e) {
+    clearInterval(timer);
+    const selectedBtn = e.target;
+    const isCorrect = selectedBtn.dataset.correct === "true";
+
+    if (isCorrect) {
+        selectedBtn.classList.add("correct");
+        score++;
+    } else {
+        selectedBtn.classList.add("incorrect");
+
+    if (timerElement.textContent.includes("seconds")) {
+        const currentTimeLeft = parseInt(timerElement.textContent.split(" ")[2]);
+        if (currentTimeLeft > 10) {
+          startTimerWithReducedTime(currentTimeLeft - 10);
+        } else {
+          startTimerWithReducedTime(0);
+        }
+      }
+    }
+
+    Array.from(answerButtons.children).forEach(button => {
+        if (button.dataset.correct === "true") {
+            button.classList.add("correct");
+        }
+        button.disabled = true;
+    });
+    nextButton.style.display = "block";
 }
+
+function startTimerWithReducedTime(timeLeft) {
+    clearInterval(timer);
+    timerElement.textContent = `Time left: ${timeLeft} seconds`;
+    timer = setInterval(() => {
+      timeLeft--;
+  
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        handleNextButton();
+      } else {
+        timerElement.textContent = `Time left: ${timeLeft} seconds`;
+      }
+    }, 1000);
+  }
+
+
+function showScore() {
+    resetState();
+    questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
+    scoreElement.textContent = `Score: ${score}`;
+    initialsForm.style.display = "block";
+    nextButton.innerHTML = "Play Again";
+    nextButton.style.display = "block";
+
+    initialsForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const initials = initialsInput.value.trim();
+        if (initials !== "") {
+            saveScore(initials, score);
+            initialsForm.style.display = "none";
+        }
+    });
+}
+
+function handleNextButton() {
+    currentQuestionIndex++;
+    if(currentQuestionIndex < questions.length){
+        showQuestion();
+    } else {
+        showScore();
+    }
+}
+
+nextButton.addEventListener("click", () => {
+    if (currentQuestionIndex < questions.length) {
+        handleNextButton();
+    } else {
+        startQuiz();
+    }
+});
+
+function saveScore(initials, score) {
+    let highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+    const newScore = {
+        initials: initials,
+        score: score,
+    }
+
+    highScores.push(newScore);
+    highScores.sort((a, b) => b.score - a.score);
+    highScores = highScores.slice(0, 10);
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+}
+
+startQuiz();
