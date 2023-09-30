@@ -4,10 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coding Quiz Challenge</title>
-    <link rel="stylesheet" href="/week-4-module-challenge/assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-<div class="app">
+<header class="start-container">
+    <h1>Coding Quiz Challenge</h1>
+    <p>When you click start, the quiz will start you will have 60 seconds to choose ypur answers. Good luck</p>
+    <button id="start-btn">Start</button>
+</header>
+<section  class="time hide">
+    <h2>Time Left: <span>30</span> seconds</h2>
+</section>
+<div class="app hide">
     <h1>Coding Quiz Challenge</h1>
     <div class="quiz">
         <h2 id="question">Question Placeholder</h2>
@@ -17,10 +25,19 @@
             <button class="btn">Answer</button>
             <button class="btn">Answer</button>
         </div>
-        <button id="next-btn">Next</button>
+       <div id="status"></div>
     </div>
 </div>
-<script src="/week-4-module-challenge/assets/js/script.js"></script>
+<div class="container hide">
+    <h2>Enter Initials join the Score board</h2>
+
+    <h3 id="score-details"></h3>
+<form class="end-quiz-form">
+    <input  id="user-input" type="text">
+    <button id="submit-btn">Submit</button>
+</form>
+</div>
+<script src="./assets/js/script.js"></script>
 
 </body>
 </html>

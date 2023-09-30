@@ -77,3 +77,10 @@ body{
 .incorrect{
     background-color: lightcoral;
 }
+
+.hide{
+    display: none;
+}
+.show{
+    display:block;
+}
