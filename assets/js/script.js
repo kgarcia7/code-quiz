@@ -68,7 +68,7 @@ const scoreDetails=document.querySelector("#score-details")
 let currentQuestionIndex = 0;
 let score = 0;
 let timer;
-let timeLeft = 30
+let timeLeft = 90;
 let highScores=[]
 
 function startQuiz () {
@@ -101,7 +101,6 @@ function showQuestion() {
        
         });
 }
-
 
 
 function startTimer() {
@@ -143,7 +142,6 @@ function selectAnswer(answer) {
 }
 
 
-
 function showScore() {
     clearInterval(timer)
     app.style.display="none"
@@ -151,9 +149,7 @@ function showScore() {
 
    scoreDetails.innerHTML = `You scored ${score} out of ${questions.length}!`;
     // scoreElement.textContent = `Score: ${score}`;
-   
-
-   
+    
 }
 
 function saveScore(initials) {
@@ -191,38 +187,3 @@ submitBtn.addEventListener("click", (event) => {
     }
 });
 
-
-
-
-//OLD CODE
-
-// function resetState() {
-//     nextButton.style.display = "none";
-//     while(answerButtons.firstChild){
-//         answerButtons.removeChild(answerButtons.firstChild);
-//     }
-// }
-
-    // Array.from(answerButtons.children).forEach(button => {
-    //     if (button.dataset.correct === "true") {
-    //         button.classList.add("correct");
-    //     }
-    //     button.disabled = true;
-    // });
-    // nextButton.style.display = "block";
-//}
-
-// function startTimerWithReducedTime(timeLeft) {
-//     clearInterval(timer);
-//     timerElement.textContent = `Time left: ${timeLeft} seconds`;
-//     timer = setInterval(() => {
-//       timeLeft--;
-  
-//       if (timeLeft <= 0) {
-//         clearInterval(timer);
-//         handleNextButton();
-//       } else {
-//         timerElement.textContent = `Time left: ${timeLeft} seconds`;
-//       }
-//     }, 1000);
-//   }
