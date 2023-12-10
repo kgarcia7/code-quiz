@@ -1,4 +1,4 @@
-#Web APIs Challenge: Code Quiz
+# Web APIs Challenge: Code Quiz
 
 # Description
 As I progress on my journey to become a full-stack web developer, it's probable that I'll encounter coding assessments, potentially as part of an interview process. These assessments typically involve a mix of multiple-choice questions and interactive coding challenges.
